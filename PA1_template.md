@@ -132,9 +132,10 @@ num.na.interval <- sum(is.na(data$interval))
 num.na.steps <- sum(is.na(data$steps))
 ```
 
-The number of rows without step data is `num.na.steps=`2304, and
-indeed there are no rows with missing intervals or dates:
-`num.na.date=`0 and `num.na.interval=`0.
+The number of rows without step data is 2304, and
+indeed there are no rows missing other values. The number of missing
+dates is 0, and the number of missing intervals is
+0.
 
 
 ### Filling in missing values

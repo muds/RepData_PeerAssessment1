@@ -298,9 +298,10 @@ num.na.interval &lt;- sum(is.na(data$interval))
 num.na.steps &lt;- sum(is.na(data$steps))
 </code></pre>
 
-<p>The number of rows without step data is <code>num.na.steps=</code>2304, and
-indeed there are no rows with missing intervals or dates:
-<code>num.na.date=</code>0 and <code>num.na.interval=</code>0.</p>
+<p>The number of rows without step data is 2304, and
+indeed there are no rows missing other values. The number of missing
+dates is 0, and the number of missing intervals is
+0.</p>
 
 <h3>Filling in missing values</h3>
 
