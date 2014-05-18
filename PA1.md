@@ -6,10 +6,9 @@ To begin, a few parameters are set to help make the subsequent output look
 better. Set options such that numbers with six or more digits before the
 decimal point will be printed in scientific notation, and numbers will be
 rounded to two decimal places.
-
 To prevent knitr from reformatting the already formatted R code chunks,
 the `tidy` option is set to `FALSE`. Finally, the `lattice` plotting package
-will be used, and is loaded here.
+will be used later, and is loaded here.
 
 ```r
 options(scipen = 1, digits = 2)
@@ -24,9 +23,10 @@ library(lattice)
 The data used in this assignment are stored in the CSV file `activity.zip`,
 compressed within the archive `activity.zip`.
 
-Extract the data and read them into the R object `data`. At the same time,
-create `hour`, `minute`, and `time` lists within the dataset by parsing the
-`interval`.
+The `unz()` command is used to extract the data, and
+`red.csv()` to read them into the R object `data`. At the same time,
+`hour`, `minute`, and `time` lists are created within the dataset by
+parsing the `interval` of each record.
 
 ```r
 data <- read.csv(unz('activity.zip', 'activity.csv'))
@@ -35,12 +35,12 @@ data$minute <- data$interval - 100*data$hour
 data$time <- sprintf('%02d:%02d', data$hour, data$minute)
 ```
 
-For example, the interval `235` now has an associated `hour` of
-`floor(235/100) = 2`. Its `minute` is `235 - 100*2 = 35`, and its `time` is
-the string `'02:35'`.
+For example, intervals labelled `235` now have an associated `hour` of
+`floor(235/100) = 2`, along with a `minute` of `235 - 100*2 = 35`,
+and `time` given by the string `'02:35'`.
 
 
-## What is mean total number of steps taken per day?
+## What is the mean total number of steps taken per day?
 
 To look at the steps taken per day, instead of per five-minute interval, the
 data must be aggregated by day, summing all values with the same `date` value.
@@ -120,7 +120,7 @@ The vertical red line indicates the location of the most active interval, on
 average, which occurs at 08:35.
 
 
-## Inputing missing values
+## Imputing missing values
 
 Several rows are missing the number of steps taken. These can be counted,
 and it can be verified that no rows are missing the date or interval,
@@ -144,7 +144,7 @@ will be given the mean number of steps in the same interval, taken over the
 days for which that interval is not `NA`. These values are already
 stored in the `meanStepsPerInterval` data frame.
 
-First, a new dataset is created. Named `datafull`, it will not have any
+First, a new dataset is created. Named `fulldata`, it will not have any
 missing values after it is processed below.
 
 ```r
@@ -158,7 +158,7 @@ and the rows with `NA` values have their `steps` field replaced with that mean.
 
 ```r
 missing <- is.na(fulldata$steps)    # Isolate the NA values
-missing.mean.idx <- match(          # Look up the mean for each interval
+missing.mean.idx <- match(          # Look up the mean for each interval,
   fulldata$interval[missing],       # by matching the missing intervals
   meanStepsPerInterval$interval     # to the intervals in the list of means
 )

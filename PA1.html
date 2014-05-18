@@ -186,11 +186,10 @@ hljs.initHighlightingOnLoad();
 <p>To begin, a few parameters are set to help make the subsequent output look
 better. Set options such that numbers with six or more digits before the
 decimal point will be printed in scientific notation, and numbers will be
-rounded to two decimal places.</p>
-
-<p>To prevent knitr from reformatting the already formatted R code chunks,
+rounded to two decimal places.
+To prevent knitr from reformatting the already formatted R code chunks,
 the <code>tidy</code> option is set to <code>FALSE</code>. Finally, the <code>lattice</code> plotting package
-will be used, and is loaded here.</p>
+will be used later, and is loaded here.</p>
 
 <pre><code class="r">options(scipen = 1, digits = 2)
 opts_chunk$set(tidy = FALSE)
@@ -202,9 +201,10 @@ library(lattice)
 <p>The data used in this assignment are stored in the CSV file <code>activity.zip</code>,
 compressed within the archive <code>activity.zip</code>.</p>
 
-<p>Extract the data and read them into the R object <code>data</code>. At the same time,
-create <code>hour</code>, <code>minute</code>, and <code>time</code> lists within the dataset by parsing the
-<code>interval</code>.</p>
+<p>The <code>unz()</code> command is used to extract the data, and
+<code>red.csv()</code> to read them into the R object <code>data</code>. At the same time,
+<code>hour</code>, <code>minute</code>, and <code>time</code> lists are created within the dataset by
+parsing the <code>interval</code> of each record.</p>
 
 <pre><code class="r">data &lt;- read.csv(unz(&#39;activity.zip&#39;, &#39;activity.csv&#39;))
 data$hour &lt;- floor(data$interval / 100)
@@ -212,11 +212,11 @@ data$minute &lt;- data$interval - 100*data$hour
 data$time &lt;- sprintf(&#39;%02d:%02d&#39;, data$hour, data$minute)
 </code></pre>
 
-<p>For example, the interval <code>235</code> now has an associated <code>hour</code> of
-<code>floor(235/100) = 2</code>. Its <code>minute</code> is <code>235 - 100*2 = 35</code>, and its <code>time</code> is
-the string <code>&#39;02:35&#39;</code>.</p>
+<p>For example, intervals labelled <code>235</code> now have an associated <code>hour</code> of
+<code>floor(235/100) = 2</code>, along with a <code>minute</code> of <code>235 - 100*2 = 35</code>,
+and <code>time</code> given by the string <code>&#39;02:35&#39;</code>.</p>
 
-<h2>What is mean total number of steps taken per day?</h2>
+<h2>What is the mean total number of steps taken per day?</h2>
 
 <p>To look at the steps taken per day, instead of per five-minute interval, the
 data must be aggregated by day, summing all values with the same <code>date</code> value.
@@ -287,7 +287,7 @@ abline(v = meanStepsPerInterval$interval[mostActiveInterval], col = &#39;red&#39
 <p>The vertical red line indicates the location of the most active interval, on
 average, which occurs at 08:35.</p>
 
-<h2>Inputing missing values</h2>
+<h2>Imputing missing values</h2>
 
 <p>Several rows are missing the number of steps taken. These can be counted,
 and it can be verified that no rows are missing the date or interval,
@@ -309,7 +309,7 @@ will be given the mean number of steps in the same interval, taken over the
 days for which that interval is not <code>NA</code>. These values are already
 stored in the <code>meanStepsPerInterval</code> data frame.</p>
 
-<p>First, a new dataset is created. Named <code>datafull</code>, it will not have any
+<p>First, a new dataset is created. Named <code>fulldata</code>, it will not have any
 missing values after it is processed below.</p>
 
 <pre><code class="r">fulldata &lt;- data
@@ -320,7 +320,7 @@ interval for each such row is looked up in the <code>meanStepsPerInterval</code>
 and the rows with <code>NA</code> values have their <code>steps</code> field replaced with that mean.</p>
 
 <pre><code class="r">missing &lt;- is.na(fulldata$steps)    # Isolate the NA values
-missing.mean.idx &lt;- match(          # Look up the mean for each interval
+missing.mean.idx &lt;- match(          # Look up the mean for each interval,
   fulldata$interval[missing],       # by matching the missing intervals
   meanStepsPerInterval$interval     # to the intervals in the list of means
 )
